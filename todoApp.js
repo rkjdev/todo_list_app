@@ -1,38 +1,41 @@
 window.addEventListener ("load", init, false);
 
 // dom handles
-var handle_input = null; 
-var handle_inputButton = null;
-var handle_taskDisplay = null;
+let handle_input = null; 
+let handle_inputButton = null;
+let handle_taskDisplay = null;
 
 function init() {
 	handle_input = document.getElementById ('todoApp_input');
 	handle_inputButton = document.getElementById ('todoApp_inputButton');
 	handle_taskDisplay = document.getElementById ('todoApp_taskDisplay');
-	handle_inputButton.addEventListener ('click', inputButtonManager, false);
+	handle_inputButton.addEventListener ('click', eventHandler_inputButton, false);
 }
 
-function inputButtonManager (event) {
-	var inputText = handle_input.value;
-	addTaskElementToTaskDisplay (inputText);
+function createTaskElement (inputText) {
+	const taskElement = document.createElement ('li');
+	const taskTextSpan = document.createElement ('span');
+	taskTextSpan.textContent = inputText;
+	taskElement.appendChild (taskTextSpan);
+	const taskDeleteButton = createTaskDeleteButton();
+	taskElement.appendChild (taskDeleteButton);
+	return taskElement;
 }
 
-function addTaskElementToTaskDisplay (inputText) {
-	var taskElement = document.createElement ('li');
-	taskElement.textContent = inputText;
-	addDeleteButtonToTaskElement (taskElement);
+function createTaskDeleteButton() {
+	const taskDeleteButton = document.createElement ('button');
+	taskDeleteButton.textContent = 'delete';
+	taskDeleteButton.addEventListener ('click', eventHandler_taskDeleteButton, false);
+	return taskDeleteButton;
+}
+
+function eventHandler_inputButton (event) {
+	const taskElement = createTaskElement (handle_input.value);
 	handle_taskDisplay.appendChild (taskElement);
 }
 
-function addDeleteButtonToTaskElement (taskElement) {
-	var taskDeleteButton = document.createElement ('button');
-	taskDeleteButton.textContent = 'delete';
-	taskDeleteButton.addEventListener ('click', taskDeleteButtonManager, false);
-	taskElement.appendChild (taskDeleteButton);
-}
-
-function taskDeleteButtonManager (event) {
-	var taskDeleteButton = event.target;
-	var taskElement = taskDeleteButton.parentNode;
+function eventHandler_taskDeleteButton (event) {
+	const taskDeleteButton = event.target;
+	const taskElement = taskDeleteButton.parentNode;
 	taskElement.remove();
 }
